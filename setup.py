@@ -8,7 +8,7 @@ with open('package.json') as f:
 package_name = str(package["name"].replace(" ", "_").replace("-", "_"))
 
 setup(
-    name='dash_html_components',
+    name='dash_html_components-noisycomputation',
     version=package["version"],
     author=package['author'],
     author_email='chris@plotly.com',
