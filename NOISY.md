@@ -3,18 +3,37 @@
 ## Motivation
 
 The only correct way to build the entire dash stack is via the
-dash project's circleci build, but that config pulls the components
+dash project's circleci build, but that config pulls dash components
 from github indiscriminately, making builds of earlier builds impossible
 without some fragile config hackery.
 
-Instead, fork all the projects, set the default `noisy` branch of all the
-projects to mutually-compatible versions, and modify the dash project's
-circleci to fetch all the forks.
+Instead, the dash, dash-table, dash-html-components, and dash-core-components
+projects have been forked by noisycomputation. The default `noisy` branch of
+all the projects points to currently supported mutually-compatible versions
+of theproject, and the dash project's circleci config has been modified
+to pull in the forks, build them, and publish the resulting packages on
+the publicly available python repository <https://noisycomputation.github.io>.
+The convention for these forks is to use the version number they are based
+on with a `.post13` suffix per
+[PEP 440](https://www.python.org/dev/peps/pep-0440/#id28).
+
+Projects wishing to use the forked noisycomputation packages need to list the
+<https://noisycomputation.github.io>  repository as an extra install URL in
+the `pip` vernacular and to pin the dependency to the exact version used by
+noisycomputation.
+
+> Care must be taken to list these dependencies *before* any
+> other dependencies that might pull the upstream packages. For example, the
+> package `dash-bootstrap-components` lists `dash>=1.9.0` as a dependency.
+> If the noisycomputation version of `dash` is listed first, it will be
+> installed from the noisycomputation repo and will satisfy the
+> `dash-bootstrap-components` dependency.
 
 ## Build Instructions
 
 Build only using the top-level dash project's circleci method, otherwise
-there is no guarantee that the build is reproducible.
+there is no guarantee that the build is reproducible or that it passes the
+battery of integration tests that only exist in the dash project.
 
 ## Fixing Javascript Dependencies
 
@@ -68,3 +87,9 @@ When committing changes, make sure to omit lint verification, since there is
 a husky commit hook defined, but it requires a full development environment:
 
     git commit --no-verify
+
+#### Changelog (individual version motivations)
+
+* v1.0.3.post13
+
+    * fix Javascript dependencies
